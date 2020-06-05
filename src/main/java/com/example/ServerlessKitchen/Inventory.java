@@ -1,18 +1,20 @@
 package com.example.ServerlessKitchen;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
+@Entity
+public class Inventory {
 
-@Embeddable
-public class Ingredient {
-
+    @Id
     private String name;
     private Integer quantity;
 
-    public Ingredient() {
+    public Inventory() {
+
     }
 
-    public Ingredient(String name, Integer quantity) {
+    public Inventory(String name, Integer quantity) {
         this.name = name;
         this.quantity = quantity;
     }

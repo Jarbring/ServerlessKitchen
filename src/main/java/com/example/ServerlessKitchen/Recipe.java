@@ -1,19 +1,23 @@
 package com.example.ServerlessKitchen;
 
+import javax.persistence.*;
 import java.util.List;
 
+@Entity
 public class Recipe {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String name;
     private String instructions;
+    @ElementCollection
     private List<Ingredient> ingredients;
 
     public Recipe() {
     }
 
-    public Recipe(Integer id, String name, String instructions, List<Ingredient> ingredients) {
-        this.id = id;
+    public Recipe(String name, String instructions, List<Ingredient> ingredients) {
         this.name = name;
         this.instructions = instructions;
         this.ingredients = ingredients;

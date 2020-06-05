@@ -3,6 +3,7 @@ package com.example.ServerlessKitchen;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,10 +11,33 @@ import java.util.List;
 public class KitchenRestController {
 
     @Autowired
-    private KitchenService KitchenService;
+    private RecipeRepository recipeRepository;
+
+    @Autowired
+    InventoryRepository inventoryRepository;
 
     @GetMapping("/ping")
     public String ping() {
+
+            Recipe recipe = new Recipe();
+            Ingredient ingredient = new Ingredient("kött", 3);
+            Ingredient ingredient2 = new Ingredient("fisk", 2);
+
+            List<Ingredient> paket = new ArrayList<>();
+
+            paket.add(ingredient);
+            paket.add(ingredient2);
+
+
+            recipe.setName("Mat");
+            recipe.setInstructions("Skaka");
+            recipe.setIngredients(paket);
+
+            recipeRepository.save(recipe);
+
+            inventoryRepository.save(new Inventory("ägg", 2));
+            inventoryRepository.save(new Inventory("mjölk", 3));
+
 
         return "pong";
     }
