@@ -3,7 +3,6 @@ package com.example.ServerlessKitchen;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,14 +10,19 @@ import java.util.List;
 public class KitchenRestController {
 
     @Autowired
-    private RecipeRepository recipeRepository;
+    private KitchenService kitchenService;
 
+
+    //Autowire below are for testing purpose and shall be deleted.
+    @Autowired
+    private RecipeRepository recipeRepository;
     @Autowired
     InventoryRepository inventoryRepository;
 
     @GetMapping("/ping")
     public String ping() {
 
+        // Content below are for testing purpose and shall be deleted.
             Recipe recipe = new Recipe();
             Ingredient ingredient = new Ingredient("kött", 3);
             Ingredient ingredient2 = new Ingredient("fisk", 2);
@@ -43,9 +47,8 @@ public class KitchenRestController {
     }
 
     @PostMapping("/clear")
-    public String clear() {
-
-        return "DB is cleared";
+    public void clear() {
+        kitchenService.clearDatabase();
     }
 
     @GetMapping("/recipes")
