@@ -3,6 +3,8 @@ package com.example.ServerlessKitchen;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,28 +55,28 @@ public class KitchenRestController {
 
     @GetMapping("/recipes")
     public List<Recipe> recipes() {
-        List<Recipe> recipes = new ArrayList<>();
-
-        return recipes;
+        return kitchenService.getRecipes();
     }
 
     @PostMapping("/recipes/create")
     private Recipe createRecipe(@RequestBody Recipe recipe) {
-
-        return recipe; //Just nu fel då den inte har ID
+        return kitchenService.createRecipe(recipe);
     }
 
     @GetMapping("/recipes/{id}")
-    private Recipe getRecipe(@PathVariable Integer id) {
-        Recipe recipe = new Recipe();
+    private Recipe getRecipe(@PathVariable Integer id, HttpServletResponse response) throws IOException {
 
-        return recipe; //return empty recipe atm
+        if(kitchenService.getRecipeById(id) == null) {
+            response.sendError(404, "Recipe does not exist");
+            return null;
+        }
+
+        return kitchenService.getRecipeById(id);
     }
 
     @DeleteMapping("/recipes/{id}")
-    public String deleteRecipe(@PathVariable Integer id) {
-
-        return "Your recipe is deleted";
+    public void deleteRecipe(@PathVariable Integer id) {
+        kitchenService.deleteRecipe(id);
     }
 
     @PatchMapping("recipes/{id}")
