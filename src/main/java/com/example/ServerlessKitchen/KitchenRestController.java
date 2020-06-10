@@ -80,29 +80,41 @@ public class KitchenRestController {
     }
 
     @PatchMapping("recipes/{id}")
-    private Recipe modifyRecipe(@PathVariable Integer id, Recipe recipe) {
-        Recipe newRecipe = recipe;
+    private Recipe modifyRecipe(@PathVariable Integer id, @RequestBody Recipe recipe, HttpServletResponse response) throws IOException {
+        if(recipe.getId() != null) {
+            response.sendError(403, "You are not allowed to change the ID for this recipe");
+            return null;
+        }else if(kitchenService.getRecipeById(id) == null) {
+            response.sendError(404, "Recipe ID does not exist");
+            return null;
+        }
 
-        return newRecipe;
+        return kitchenService.modifyRecipe(recipe, id);
     }
 
     @PostMapping("/recipes/{id}/make")
-    private String make(@PathVariable Integer id, @RequestBody Recipe recipe) {
+    private String make(@PathVariable Integer id, HttpServletResponse response) throws IOException {
+        if(kitchenService.getRecipeById(id) == null) {
+            response.sendError(404, "Recipe ID does not exist");
+            return null;
+        }else if(!kitchenService.checkIfCanBeCooked(id)) {
+            response.sendError(403, "Not enough ingredients");
+            return null;
+        }
+
+        kitchenService.make(id);
 
         return "Yummy!";
     }
 
     @GetMapping("/inventory")
-    private List<Ingredient> inventory() {
-        List<Ingredient> inventory = new ArrayList<>();
-
-        return inventory;
+    private List<Inventory> getInventory() {
+        return kitchenService.getInventory();
     }
 
     @PostMapping("/inventory/fill")
-    private String fillInventory(@RequestBody List<Ingredient> ingredients) {
-
-        return "You have refilled your inventory";
+    private void fillInventory(@RequestBody List<Inventory> inventoryList) {
+        kitchenService.fillInventory(inventoryList);
     }
 
     //"ADVANCED STUFF"-part
