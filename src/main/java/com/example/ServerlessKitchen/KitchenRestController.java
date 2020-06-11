@@ -59,7 +59,14 @@ public class KitchenRestController {
     }
 
     @PostMapping("/recipes/create")
-    private Recipe createRecipe(@RequestBody Recipe recipe) {
+    private Recipe createRecipe(@RequestBody Recipe recipe, HttpServletResponse response) throws IOException {
+        if(!kitchenService.isRecipeQuantityAboveZero(recipe)) {
+            response.sendError(403, "Ingredient quantity is less than 1");
+            return null;
+        }else if(!kitchenService.isRecipeNameAvailable(recipe)) {
+            response.sendError(403, "Recipe name already exist");
+            return null;
+        }
         return kitchenService.createRecipe(recipe);
     }
 
@@ -83,6 +90,12 @@ public class KitchenRestController {
     private Recipe modifyRecipe(@PathVariable Integer id, @RequestBody Recipe recipe, HttpServletResponse response) throws IOException {
         if(recipe.getId() != null) {
             response.sendError(403, "You are not allowed to change the ID for this recipe");
+            return null;
+        }else if(recipe.getIngredients() != null && !kitchenService.isRecipeQuantityAboveZero(recipe)) {
+            response.sendError(403, "Ingredient quantity is less than 1");
+            return null;
+        }else if(recipe.getName() != null && !kitchenService.isRecipeNameAvailable(recipe)) {
+            response.sendError(403, "Recipe name already exist");
             return null;
         }else if(kitchenService.getRecipeById(id) == null) {
             response.sendError(404, "Recipe ID does not exist");

@@ -56,11 +56,21 @@ public class KitchenService {
     }
 
     public void make(Integer id) {
+        List<Inventory> newInventory = getInventory();
+        Recipe recipe = getRecipeById(id);
 
+        newInventory.stream().
+                forEach(newInventoryItem -> {recipe.getIngredients().stream()
+                        .filter(ingredientItem -> {return ingredientItem.getName().equals(newInventoryItem.getName());})
+                        .limit(1)
+                        .forEach(ingredientItem -> {newInventoryItem.setQuantity(newInventoryItem.getQuantity() - ingredientItem.getQuantity());});
+                    ;});
+
+        inventoryRepository.saveAll(newInventory);
     }
 
     public List<Inventory> getInventory() {
-        return (List<Inventory>) inventoryRepository.findAll();
+        return inventoryRepository.findByQuantityGreaterThan(0);
     }
 
     public void fillInventory(List<Inventory> inventoryList) {
@@ -96,4 +106,16 @@ public class KitchenService {
         return recipe.getIngredients().size() == recipeIngredientList.size();
     }
 
+    public boolean isRecipeQuantityAboveZero(Recipe recipe) {
+        List<Ingredient> ingredientList = recipe.getIngredients();
+
+        return ingredientList.stream()
+               .noneMatch(ingredientItem -> ingredientItem.getQuantity() == null || ingredientItem.getQuantity()<1);
+    }
+
+    public boolean isRecipeNameAvailable(Recipe recipe) {
+        List<Recipe> recipeList = getRecipes();
+        return recipeList.stream()
+                .noneMatch(recipeItem -> recipeItem.getName().equals(recipe.getName()));
+    }
 }
