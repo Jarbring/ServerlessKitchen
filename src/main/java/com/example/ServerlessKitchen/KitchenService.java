@@ -3,9 +3,7 @@ package com.example.ServerlessKitchen;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Iterator;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -106,16 +104,15 @@ public class KitchenService {
         return recipe.getIngredients().size() == recipeIngredientList.size();
     }
 
-    public boolean isRecipeQuantityAboveZero(Recipe recipe) {
+    public boolean isRecipeQuantityBelowOne(Recipe recipe) {
         List<Ingredient> ingredientList = recipe.getIngredients();
-
         return ingredientList.stream()
-               .noneMatch(ingredientItem -> ingredientItem.getQuantity() == null || ingredientItem.getQuantity()<1);
+                .anyMatch(ingredientItem -> ingredientItem.getQuantity() == null || ingredientItem.getQuantity() < 1);
     }
 
-    public boolean isRecipeNameAvailable(Recipe recipe) {
+    public boolean isRecipeNameTaken(Recipe recipe) {
         List<Recipe> recipeList = getRecipes();
         return recipeList.stream()
-                .noneMatch(recipeItem -> recipeItem.getName().equals(recipe.getName()));
+                .anyMatch(recipeItem -> recipeItem.getName().equals(recipe.getName()));
     }
 }

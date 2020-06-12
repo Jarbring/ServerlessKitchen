@@ -13,6 +13,7 @@ public class Recipe {
     private String instructions;
     @ElementCollection
     private List<Ingredient> ingredients;
+    private Integer count;
 
     public Recipe() {
     }
@@ -53,5 +54,13 @@ public class Recipe {
 
     public void setIngredients(List<Ingredient> ingredients) {
         this.ingredients = ingredients;
+    }
+
+    public Integer getCount() {
+        return count;
+    }
+
+    public void setCount(Integer count) {
+        this.count = count;
     }
 }
