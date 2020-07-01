@@ -5,7 +5,7 @@ public class MethodsToTest {
 
         Recipe returnRecipe = recipe;
 
-        returnRecipe.setCount(11);
+        returnRecipe.setId(1);
 
         return returnRecipe;
     }

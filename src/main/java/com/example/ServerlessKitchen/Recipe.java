@@ -1,5 +1,8 @@
 package com.example.ServerlessKitchen;
 
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -11,9 +14,9 @@ public class Recipe {
     private Integer id;
     private String name;
     private String instructions;
+    @LazyCollection(LazyCollectionOption.FALSE)
     @ElementCollection
     private List<Ingredient> ingredients;
-    private Integer count;
 
     public Recipe() {
     }
@@ -56,11 +59,4 @@ public class Recipe {
         this.ingredients = ingredients;
     }
 
-    public Integer getCount() {
-        return count;
-    }
-
-    public void setCount(Integer count) {
-        this.count = count;
-    }
 }

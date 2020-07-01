@@ -3,6 +3,7 @@ package com.example.ServerlessKitchen;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -114,5 +115,39 @@ public class KitchenService {
         List<Recipe> recipeList = getRecipes();
         return recipeList.stream()
                 .anyMatch(recipeItem -> recipeItem.getName().equals(recipe.getName()));
+    }
+
+
+    public List<CountResponseRecipeOnly> countByRecipe() {
+
+            List<Recipe> recipes = getRecipes();
+            List<CountResponseRecipeOnly> countResponseRecipeOnyList = new ArrayList<>();
+            List<Inventory> inventoryList = getInventory();
+
+            for (int i = 0; i < recipes.size(); i++) {
+                int min = Integer.MAX_VALUE;
+                int found = 0;
+                for (int j = 0; j < recipes.get(i).getIngredients().size(); j++) {
+
+                    for (int k = 0; k < inventoryList.size(); k++) {
+                        if (recipes.get(i).getIngredients().get(j).getName().equals(inventoryList.get(k).getName())) {
+                            int count = inventoryList.get(k).getQuantity() / recipes.get(i).getIngredients().get(j).getQuantity();
+                            found++;
+                            if (count < min) {
+                                min = count;
+                            }
+                            break;
+                        }
+                    }
+                }
+                countResponseRecipeOnyList.add(new CountResponseRecipeOnly(recipes.get(i).getId(), found == recipes.get(i).getIngredients().size() ? min : 0));
+
+            }
+            return countResponseRecipeOnyList;
+    }
+
+    public int optimizeTotalCount(Recipe r1) {
+
+        return 11;
     }
 }

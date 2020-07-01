@@ -134,8 +134,8 @@ public class KitchenRestController {
     //"ADVANCED STUFF"-part
 
     @GetMapping("/recipes/get-count-by-recipe")
-    private String getCountByRecipe() {
-        return "get count by recipe(not finished)";
+    private List<CountResponseRecipeOnly> getCountByRecipe() {
+        return kitchenService.countByRecipe();
     }
 
     @GetMapping("/recipes/optimize-total-count")
