@@ -146,8 +146,18 @@ public class KitchenService {
             return countResponseRecipeOnyList;
     }
 
-    public int optimizeTotalCount(Recipe r1) {
+    public CountResponse optimizeTotalCount() {
+        List<Recipe> recipes = getRecipes();
+        List<Inventory> inventoryList = getInventory();
+        CountResponse countResponse = new CountResponse();
 
-        return 11;
+        
+
+        return countResponse;
+    }
+
+    public boolean isIngredientsAboveZero(List<Inventory> inventoryList) {
+        return inventoryList.stream()
+                .allMatch(inventoryItem -> inventoryItem.getQuantity() > 0);
     }
 }

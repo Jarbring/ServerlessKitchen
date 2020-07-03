@@ -71,11 +71,10 @@ public class ServerlessKitchenApplicationTests {
 		Assert.assertEquals("Cotton Candy Count", (Integer)1, kitchenService.countByRecipe().get(2).getCount());
 	}
 
-	/*@Test
+	@Test
 	public void testOptimizeTotalCount() throws Exception {
-		Assert.assertEquals("Sugar Cake", 11, kitchenService.optimizeTotalCount(r1));
-		Assert.assertEquals("Sugar Cake", 4, kitchenService.optimizeTotalCount(r2));
-		Assert.assertEquals("Sugar Cake", 1, kitchenService.optimizeTotalCount(r3));
-	}*/
+		Assert.assertEquals("Sugar Cake", (Integer)15, kitchenService.optimizeTotalCount().getRecipeCount());
+		Assert.assertEquals("Sugar Cake", (Integer)11, kitchenService.optimizeTotalCount().getUnusedInventoryCount());
+	}
 
 }

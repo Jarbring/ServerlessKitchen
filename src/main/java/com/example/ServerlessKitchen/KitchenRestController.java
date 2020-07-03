@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+@CrossOrigin
 @RestController
 public class KitchenRestController {
 
@@ -49,8 +50,9 @@ public class KitchenRestController {
     }
 
     @PostMapping("/clear")
-    public void clear() {
+    public void clear(HttpServletResponse response) {
         kitchenService.clearDatabase();
+        response.setStatus(204);
     }
 
     @GetMapping("/recipes")
@@ -61,10 +63,10 @@ public class KitchenRestController {
     @PostMapping("/recipes/create")
     private Recipe createRecipe(@RequestBody Recipe recipe, HttpServletResponse response) throws IOException {
         if(kitchenService.isRecipeQuantityBelowOne(recipe)) {
-            response.sendError(403, "Ingredient quantity is less than 1");
+            response.sendError(400, "Ingredient quantity is less than 1");
             return null;
         }else if(kitchenService.isRecipeNameTaken(recipe)) {
-            response.sendError(403, "Recipe name already exist");
+            response.sendError(400, "Recipe name already exist");
             return null;
         }
         return kitchenService.createRecipe(recipe);
@@ -112,7 +114,7 @@ public class KitchenRestController {
             response.sendError(404, "Recipe ID does not exist");
             return null;
         }else if(!kitchenService.checkIfCanBeCooked(id)) {
-            response.sendError(403, "Not enough ingredients");
+            response.sendError(400, "Not enough ingredients");
             return null;
         }
 
@@ -127,8 +129,14 @@ public class KitchenRestController {
     }
 
     @PostMapping("/inventory/fill")
-    private void fillInventory(@RequestBody List<Inventory> inventoryList) {
-        kitchenService.fillInventory(inventoryList);
+    private void fillInventory(@RequestBody List<Inventory> inventoryList, HttpServletResponse response) {
+        if(kitchenService.isIngredientsAboveZero(inventoryList)) {
+            kitchenService.fillInventory(inventoryList);
+            response.setStatus(204);
+        } else
+            response.setStatus(400);
+
+
     }
 
     //"ADVANCED STUFF"-part
@@ -139,8 +147,8 @@ public class KitchenRestController {
     }
 
     @GetMapping("/recipes/optimize-total-count")
-    private String optimizeTotalCount() {
-        return "optimize total count(not finished)";
+    private CountResponse optimizeTotalCount() {
+        return kitchenService.optimizeTotalCount();
     }
 
     @GetMapping("/recipes/optimize-total-waste")
