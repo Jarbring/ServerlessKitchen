@@ -24,28 +24,6 @@ public class KitchenRestController {
 
     @GetMapping("/ping")
     public String ping() {
-
-        // Content below are for testing purpose and shall be deleted.
-            Recipe recipe = new Recipe();
-            Ingredient ingredient = new Ingredient("kött", 3);
-            Ingredient ingredient2 = new Ingredient("fisk", 2);
-
-            List<Ingredient> paket = new ArrayList<>();
-
-            paket.add(ingredient);
-            paket.add(ingredient2);
-
-
-            recipe.setName("Mat");
-            recipe.setInstructions("Skaka");
-            recipe.setIngredients(paket);
-
-            recipeRepository.save(recipe);
-
-            inventoryRepository.save(new Inventory("ägg", 2));
-            inventoryRepository.save(new Inventory("mjölk", 3));
-
-
         return "pong";
     }
 
